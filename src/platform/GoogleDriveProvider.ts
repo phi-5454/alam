@@ -71,7 +71,7 @@ export class GoogleDriveProvider implements IFileProvider {
     if (!response.ok) throw new Error("Failed to read file from Google Drive");
     return await response.text();
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async writeFile(fileId: string, content: string): Promise<boolean> {
     // We are skipping this for now, as requested!
     throw new Error("Save functionality not yet implemented for Google Drive.");

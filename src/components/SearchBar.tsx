@@ -32,6 +32,7 @@ export const SearchBar = () => {
     includeMatches: true, // Useful if you want to highlight the snippet later
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const getSnippet = (result: any) => {
     // 1. Check if the match happened in the description
     const descMatch = result.matches?.find((m: any) => m.key === "description");

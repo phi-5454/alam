@@ -82,12 +82,12 @@ export class CloudFileProvider implements IFileProvider {
     // TODO: Fetch files from Cloud API using this.token
     return [];
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async readFile(fileId: string): Promise<string> {
     // TODO: Fetch file content from Cloud API
     return "";
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async writeFile(fileId: string, content: string): Promise<boolean> {
     // TODO: PUT/PATCH request to Cloud API
     return true;

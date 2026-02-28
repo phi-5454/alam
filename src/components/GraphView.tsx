@@ -5,7 +5,6 @@ import { SigmaContainer, useLoadGraph } from "@react-sigma/core";
 import "@react-sigma/core/lib/style.css";
 import louvain from "graphology-communities-louvain";
 import forceAtlas2 from "graphology-layout-forceatlas2";
-import Fuse from "fuse.js";
 import { SearchBar } from "./SearchBar";
 import { NodeInspector } from "./NodeInspector";
 import { HoverEffect } from "./HoverEffect";
