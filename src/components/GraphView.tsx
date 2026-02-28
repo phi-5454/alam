@@ -10,133 +10,9 @@ import { SearchBar } from "./SearchBar";
 import { NodeInspector } from "./NodeInspector";
 import { HoverEffect } from "./HoverEffect";
 
-// 1. Our Markdown-compatible DSL string
-// Note: Using strict JSON format {"key": "value"} for properties to ensure safe parsing
-const rawGraphText = `
-# --- PHYSICS CLUSTER ---
-
-[electrons]
-label = "Electrons"
-color = "#FA4F40"
-size = 25
-link = "https://en.wikipedia.org/wiki/Electron"
-description = """
-# Electrons
-Electrons are **subatomic particles** with a negative elementary electric charge. 
-They belong to the first generation of the lepton particle family.
-Key properties:
-- Mass: 9.109 × 10⁻³¹ kg
-- Charge: -1e
-"""
-
-[leptons]
-label = "Leptons"
-size = 20
-description = "A subatomic particle, such as an electron, muon, or neutrino, which does not take part in the strong interaction."
-
-[quarks]
-label = "Quarks"
-description = "Elementary particles and a fundamental constituent of matter. Quarks combine to form composite particles called hadrons."
-
-[protons]
-label = "Protons"
-description = "A subatomic particle with a positive electric charge found in the nucleus of every atom."
-
-[nucleus]
-label = "Nucleus"
-description = "The small, dense region consisting of protons and neutrons at the center of an atom."
-
-[atoms]
-label = "Atoms"
-description = "The smallest unit of ordinary matter that forms a chemical element."
-
-# --- PHILOSOPHY CLUSTER ---
-
-[epistemology]
-label = "Epistemology"
-color = "#405CFA"
-size = 25
-description = """
-# Epistemology
-The theory of knowledge, especially with regard to its methods, validity, and scope. 
-It is the investigation of what distinguishes justified belief from opinion.
-"""
-
-[empiricism]
-label = "Empiricism"
-description = "The theory that all knowledge is derived from sense-experience."
-
-[rationalism]
-label = "Rationalism"
-description = "The theory that reason rather than experience is the foundation of certainty in knowledge."
-
-[logic]
-label = "Logic"
-description = "Reasoning conducted or assessed according to strict principles of validity."
-
-[science]
-label = "Science"
-size = 30
-description = "A systematic enterprise that builds and organizes knowledge in the form of testable explanations and predictions."
-
-# --- RELATIONSHIPS ---
-
-[[relationships]]
-source = "electrons"
-target = "leptons"
-type = "is_a"
-
-[[relationships]]
-source = "quarks"
-target = "protons"
-type = "composes"
-
-[[relationships]]
-source = "quarks"
-target = "oatmeal"
-type = "compose"
-
-[[relationships]]
-source = "oatmeal"
-target = "science"
-type = "feeds"
-
-[[relationships]]
-source = "protons"
-target = "nucleus"
-type = "part_of"
-
-[[relationships]]
-source = "nucleus"
-target = "atoms"
-type = "core_of"
-
-[[relationships]]
-source = "empiricism"
-target = "epistemology"
-type = "branch_of"
-
-[[relationships]]
-source = "rationalism"
-target = "epistemology"
-type = "branch_of"
-
-[[relationships]]
-source = "logic"
-target = "epistemology"
-type = "foundation_of"
-
-[[relationships]]
-source = "science"
-target = "empiricism"
-type = "utilizes"
-
-# --- THE CROSS-DOMAIN BRIDGE ---
-[[relationships]]
-source = "science"
-target = "atoms"
-type = "investigates"
-`;
+interface GraphViewProps {
+  tomlString: string;
+}
 
 // 2. The Parser
 const parseLPG = (tomlString: string): MultiDirectedGraph => {
@@ -195,11 +71,13 @@ const parseLPG = (tomlString: string): MultiDirectedGraph => {
 };
 
 // 3. The Data Loader Component
-const LoadData = () => {
+const LoadData: React.FC<{ tomlString: string }> = ({ tomlString }) => {
   const loadGraph = useLoadGraph();
 
   useEffect(() => {
-    const graph = parseLPG(rawGraphText);
+    if (!tomlString) return;
+    // 1. Parse the TOML (using your smol-toml setup)
+    const graph = parseLPG(tomlString);
     console.log(
       "Parsed Graph Nodes:",
       graph.nodes().map((n) => ({
@@ -239,7 +117,7 @@ const LoadData = () => {
 
     // 5. Load the clustered, color-coded graph into Sigma
     loadGraph(graph);
-  }, [loadGraph]);
+  }, [loadGraph, tomlString]);
 
   return null;
 };
@@ -266,7 +144,7 @@ const drawLabelInside = (
 };
 
 // 4. The Main View Component
-export const GraphView: React.FC = () => {
+export const GraphView: React.FC<GraphViewProps> = ({ tomlString }) => {
   return (
     <div
       style={{ height: "100vh", width: "100vw", backgroundColor: "#1e1e1e" }}
@@ -287,8 +165,8 @@ export const GraphView: React.FC = () => {
           // defaultDrawNodeHover: drawLabelInside,
         }}
       >
-        <LoadData />
-        <SearchBar className="bg-black" />
+        <LoadData tomlString={tomlString} />
+        <SearchBar />
         <NodeInspector />
         <HoverEffect />
       </SigmaContainer>
